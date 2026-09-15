@@ -1,35 +1,31 @@
 package com.yogasri.yogasrimart.util;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 public class DatabaseConnection {
-    private static final String URL = "jdbc:h2:./data/yogasrimart";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "";
+    private static HikariDataSource dataSource;
+    public static void initialize() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:h2:./data/yogasrimart");
+        config.setUsername("sa");
+        config.setPassword("");
+        config.setDriverClassName("org.h2.Driver");
+        config.setMaximumPoolSize(10);
+        dataSource = new HikariDataSource(config);
+        System.out.println("HikariCP connection pool initialized.");
+    }
     public static Connection getConnection() throws SQLException {
-        Connection connection =
-                DriverManager.getConnection(URL, USER, PASSWORD);
-        try {
-            InputStream inputStream =
-                    DatabaseConnection.class.getClassLoader()
-                            .getResourceAsStream("schema.sql");
-            if (inputStream == null) {
-                throw new SQLException("schema.sql not found");
-            }
-            String sql = new String(
-                    inputStream.readAllBytes(),
-                    StandardCharsets.UTF_8
-            );
-            Statement statement = connection.createStatement();
-            statement.execute(sql);
-            statement.close();
-            inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (dataSource == null) {
+            throw new SQLException("Database connection pool is not initialized.");
         }
-        return connection;
+        return dataSource.getConnection();
+    }
+    public static void shutdown() {
+        if (dataSource != null) {
+            dataSource.close();
+            System.out.println("HikariCP connection pool closed.");
+        }
     }
 }

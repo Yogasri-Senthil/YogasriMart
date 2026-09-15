@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>YogasriMart - Login</title>
+    <title>YogasriMart - Register</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,7 +13,7 @@
             height: 100vh;
             margin: 0;
         }
-        .login-container {
+        .register-container {
             background: white;
             width: 350px;
             padding: 30px;
@@ -53,17 +53,23 @@
         button:hover {
             background: #555;
         }
-        .register {
+        .login {
             margin-top: 15px;
             text-align: center;
         }
     </style>
 </head>
 <body>
-<div class="login-container">
+<div class="register-container">
     <h1>YogasriMart</h1>
-    <p>Welcome back! Please login.</p>
-    <form action="login" method="post">
+    <p>Create your account</p>
+    <form action="register" method="post">
+        <label for="name">Name</label>
+        <input type="text"
+               id="name"
+               name="name"
+               placeholder="Enter your name"
+               required>
         <label for="email">Email</label>
         <input type="email"
                id="email"
@@ -74,13 +80,13 @@
         <input type="password"
                id="password"
                name="password"
-               placeholder="Enter your password"
+               placeholder="Create a password"
                required>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
     </form>
-    <div class="register">
-        Don't have an account?
-        <a href="${pageContext.request.contextPath}/register.jsp">Register</a>
+    <div class="login">
+        Already have an account?
+        <a href="login.jsp">Login</a>
     </div>
 </div>
 </body>
