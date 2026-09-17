@@ -227,9 +227,13 @@
             ₹999
         </div>
         <div class="product-buttons">
-          <a href="cart.jsp?name=Wireless%20Headphones&price=999" class="cart-btn">
-              🛒 Add to Cart
-          </a>
+         <form action="add-to-cart" method="post">
+    <input type="hidden" name="name" value="Wireless Headphones">
+    <input type="hidden" name="price" value="999">
+    <button type="submit" class="cart-btn">
+        🛒 Add to Cart
+    </button>
+</form>
             <button class="wish-btn">
                 ❤️
             </button>
@@ -246,9 +250,13 @@
             ₹1,499
         </div>
         <div class="product-buttons">
-           <a href="cart.jsp?name=Smart%20Watch&price=1499" class="cart-btn">
-               🛒 Add to Cart
-           </a>
+          <form action="add-to-cart" method="post">
+    <input type="hidden" name="name" value="Smart Watch">
+    <input type="hidden" name="price" value="1499">
+    <button type="submit" class="cart-btn">
+        🛒 Add to Cart
+    </button>
+</form>
             <button class="wish-btn">
                 ❤️
             </button>
@@ -265,9 +273,13 @@
             ₹799
         </div>
         <div class="product-buttons">
-           <a href="cart.jsp?name=Travel%20Backpack&price=799" class="cart-btn">
-               🛒 Add to Cart
-           </a>
+          <form action="add-to-cart" method="post">
+    <input type="hidden" name="name" value="Travel Backpack">
+    <input type="hidden" name="price" value="799">
+    <button type="submit" class="cart-btn">
+        🛒 Add to Cart
+    </button>
+</form>
             <button class="wish-btn">
                 ❤️
             </button>
@@ -284,9 +296,13 @@
             ₹1,299
         </div>
         <div class="product-buttons">
-           <a href="cart.jsp?name=Sports%20Shoes&price=1299" class="cart-btn">
-               🛒 Add to Cart
-           </a>
+          <form action="add-to-cart" method="post">
+    <input type="hidden" name="name" value="Sports Shoes">
+    <input type="hidden" name="price" value="1299">
+    <button type="submit" class="cart-btn">
+        🛒 Add to Cart
+    </button>
+</form>
             <button class="wish-btn">
                 ❤️
             </button>
@@ -303,9 +319,13 @@
             ₹45,999
         </div>
         <div class="product-buttons">
-            <a href="cart.jsp?name=Laptop&price=45999" class="cart-btn">
-                🛒 Add to Cart
-            </a>
+            <form action="add-to-cart" method="post">
+    <input type="hidden" name="name" value="Laptop">
+    <input type="hidden" name="price" value="45999">
+    <button type="submit" class="cart-btn">
+        🛒 Add to Cart
+    </button>
+</form>
             <button class="wish-btn">
                 ❤️
             </button>
@@ -322,9 +342,13 @@
             ₹18,999
         </div>
         <div class="product-buttons">
-           <a href="cart.jsp?name=Smart%20Phone&price=18999" class="cart-btn">
-               🛒 Add to Cart
-           </a>
+          <form action="add-to-cart" method="post">
+    <input type="hidden" name="name" value="Smart Phone">
+    <input type="hidden" name="price" value="18999">
+    <button type="submit" class="cart-btn">
+        🛒 Add to Cart
+    </button>
+</form>
             <button class="wish-btn">
                 ❤️
             </button>
@@ -341,9 +365,13 @@
             ₹899
         </div>
         <div class="product-buttons">
-            <a href="cart.jsp?name=Women's%20Dress&price=899" class="cart-btn">
-                🛒 Add to Cart
-            </a>
+           <form action="add-to-cart" method="post">
+    <input type="hidden" name="name" value="Women's Dress">
+    <input type="hidden" name="price" value="899">
+    <button type="submit" class="cart-btn">
+        🛒 Add to Cart
+    </button>
+</form>
             <button class="wish-btn">
                 ❤️
             </button>
@@ -360,9 +388,13 @@
             ₹699
         </div>
         <div class="product-buttons">
-           <a href="cart.jsp?name=Women's%20Dress&price=899" class="cart-btn">
-               🛒 Add to Cart
-           </a>
+           <form action="add-to-cart" method="post">
+    <input type="hidden" name="name" value="Beauty Kit">
+    <input type="hidden" name="price" value="699">
+    <button type="submit" class="cart-btn">
+        🛒 Add to Cart
+    </button>
+</form>
             <button class="wish-btn">
                 ❤️
             </button>

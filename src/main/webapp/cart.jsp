@@ -1,3 +1,5 @@
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -37,7 +39,7 @@
         }
         .container {
             width: 85%;
-            max-width: 900px;
+            max-width: 950px;
             margin: 45px auto;
         }
         h1 {
@@ -45,7 +47,8 @@
         }
         .cart-item {
             background: white;
-            padding: 25px;
+            padding: 20px;
+            margin-bottom: 15px;
             border-radius: 12px;
             box-shadow: 0 3px 12px rgba(0,0,0,0.08);
             display: flex;
@@ -58,29 +61,56 @@
             gap: 20px;
         }
         .product-icon {
-            font-size: 55px;
+            font-size: 50px;
         }
         .product-name {
             font-size: 20px;
             font-weight: bold;
+        }
+        .quantity {
+            color: #666;
+            margin-top: 5px;
         }
         .price {
             color: #0284c7;
             font-size: 20px;
             font-weight: bold;
         }
-        .empty {
-            text-align: center;
-            color: #666;
+        .total-box {
+            background: white;
+            padding: 25px;
+            margin-top: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            text-align: right;
         }
-        .shop-btn {
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+        .shop-btn,
+        .checkout-btn {
             display: inline-block;
-            margin-top: 20px;
-            background: #0284c7;
-            color: white;
             padding: 12px 22px;
             border-radius: 8px;
             text-decoration: none;
+            color: white;
+            margin-left: 10px;
+        }
+        .shop-btn {
+            background: #6b7280;
+        }
+        .checkout-btn {
+            background: #0284c7;
+        }
+        .empty {
+            text-align: center;
+            color: #666;
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -98,15 +128,23 @@
 <div class="container">
     <h1>🛒 Your Shopping Cart</h1>
     <%
-        String name = request.getParameter("name");
-        String price = request.getParameter("price");
-        if (name != null && price != null) {
+        List<Map<String, String>> cart =
+                (List<Map<String, String>>) session.getAttribute("cart");
+        double total = 0;
+        if (cart != null && !cart.isEmpty()) {
+            for (Map<String, String> product : cart) {
+                String name = product.get("name");
+                String priceString = product.get("price");
+                double price = Double.parseDouble(priceString);
+                total += price;
     %>
         <div class="cart-item">
             <div class="product-info">
                 <div class="product-icon">
                     <%
-                        if (name.equals("Smart Watch")) {
+                        if (name.equals("Wireless Headphones")) {
+                            out.print("🎧");
+                        } else if (name.equals("Smart Watch")) {
                             out.print("⌚");
                         } else if (name.equals("Travel Backpack")) {
                             out.print("🎒");
@@ -121,7 +159,7 @@
                         } else if (name.equals("Beauty Kit")) {
                             out.print("💄");
                         } else {
-                            out.print("🎧");
+                            out.print("🛍️");
                         }
                     %>
                 </div>
@@ -129,18 +167,37 @@
                     <div class="product-name">
                         <%= name %>
                     </div>
-                    <p>Quantity: 1</p>
+                    <div class="quantity">
+                        Quantity: 1
+                    </div>
                 </div>
             </div>
             <div class="price">
-                ₹<%= price %>
+                ₹<%= String.format("%.0f", price) %>
             </div>
+        </div>
+    <%
+            }
+    %>
+        <div class="total-box">
+            <div class="total">
+                Total: ₹<%= String.format("%.0f", total) %>
+            </div>
+            <a href="products.jsp" class="shop-btn">
+                Continue Shopping
+            </a>
+            <a href="checkout.jsp" class="checkout-btn">
+                Proceed to Checkout
+            </a>
         </div>
     <%
         } else {
     %>
         <div class="empty">
             <h2>Your cart is empty 🛒</h2>
+            <p style="margin-top:10px;">
+                Add some products to your cart.
+            </p>
             <a href="products.jsp" class="shop-btn">
                 Continue Shopping
             </a>
