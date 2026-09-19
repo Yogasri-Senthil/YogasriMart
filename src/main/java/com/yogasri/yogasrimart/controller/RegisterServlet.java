@@ -17,11 +17,12 @@ public class RegisterServlet extends HttpServlet {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String role = request.getParameter("role");
         User user = new User();
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
-        user.setRole("BUYER");
+        user.setRole(role);
         boolean registered = userDAO.registerUser(user);
         if (registered) {
             response.sendRedirect("login.jsp?success=registered");

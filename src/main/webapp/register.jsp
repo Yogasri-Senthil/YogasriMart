@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,6 +58,20 @@
             margin-top: 15px;
             text-align: center;
         }
+        .role-options {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+        .role-options label {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .role-options input {
+            width: auto;
+        }
     </style>
 </head>
 <body>
@@ -82,6 +97,22 @@
                name="password"
                placeholder="Create a password"
                required>
+        <label>Choose Role</label>
+        <div class="role-options">
+            <label>
+                <input type="radio"
+                       name="role"
+                       value="BUYER"
+                       required>
+                &#128722; Buyer
+            </label>
+            <label>
+                <input type="radio"
+                       name="role"
+                       value="SELLER">
+                &#127978; Seller
+            </label>
+        </div>
         <button type="submit">Register</button>
     </form>
     <div class="login">
