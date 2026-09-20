@@ -18,5 +18,19 @@ CREATE TABLE IF NOT EXISTS products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE products
-ADD COLUMN IF NOT EXISTS seller_id INT;
+CREATE TABLE IF NOT EXISTS orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    buyer_id INT NOT NULL,
+    seller_id INT NOT NULL,
+    product_id INT NOT NULL,
+    product_name VARCHAR(150) NOT NULL,
+    quantity INT NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    pincode VARCHAR(20) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    status VARCHAR(30) DEFAULT 'PLACED',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -11,11 +11,12 @@ import java.util.List;
 
 public class ProductDAO {
 
+    // ADD PRODUCT
     public boolean addProduct(Product product) {
 
         String sql = "INSERT INTO products " +
-                     "(name, description, price, category, stock, seller_id) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
+                "(name, description, price, category, stock, seller_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -27,9 +28,7 @@ public class ProductDAO {
             statement.setInt(5, product.getStock());
             statement.setInt(6, product.getSellerId());
 
-            int rows = statement.executeUpdate();
-
-            return rows > 0;
+            return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,19 +36,17 @@ public class ProductDAO {
         }
     }
 
-    public List<Product> getProductsBySeller(int sellerId) {
+    // GET ALL PRODUCTS
+    public List<Product> getAllProducts() {
 
         List<Product> products = new ArrayList<>();
 
-        String sql = "SELECT id, name, description, price, category, stock " +
-                     "FROM products WHERE seller_id = ? ORDER BY id DESC";
+        String sql = "SELECT id, name, description, price, category, stock, seller_id " +
+                "FROM products ORDER BY id DESC";
 
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, sellerId);
-
-            ResultSet resultSet = statement.executeQuery();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
 
@@ -61,6 +58,7 @@ public class ProductDAO {
                 product.setPrice(resultSet.getDouble("price"));
                 product.setCategory(resultSet.getString("category"));
                 product.setStock(resultSet.getInt("stock"));
+                product.setSellerId(resultSet.getInt("seller_id"));
 
                 products.add(product);
             }
@@ -71,84 +69,126 @@ public class ProductDAO {
 
         return products;
     }
-    public boolean deleteProduct(int productId, int sellerId) {
 
-    String sql = "DELETE FROM products WHERE id = ? AND seller_id = ?";
+    // GET PRODUCTS BY SELLER
+    public List<Product> getProductsBySeller(int sellerId) {
 
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
+        List<Product> products = new ArrayList<>();
 
-        statement.setInt(1, productId);
-        statement.setInt(2, sellerId);
+        String sql = "SELECT id, name, description, price, category, stock, seller_id " +
+                "FROM products WHERE seller_id = ? ORDER BY id DESC";
 
-        int rows = statement.executeUpdate();
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-        return rows > 0;
+            statement.setInt(1, sellerId);
 
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
-    }
-}
-public boolean updateProduct(Product product) {
+            try (ResultSet resultSet = statement.executeQuery()) {
 
-    String sql = "UPDATE products SET " +
-                 "name = ?, description = ?, price = ?, " +
-                 "category = ?, stock = ? " +
-                 "WHERE id = ? AND seller_id = ?";
+                while (resultSet.next()) {
 
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
+                    Product product = new Product();
 
-        statement.setString(1, product.getName());
-        statement.setString(2, product.getDescription());
-        statement.setDouble(3, product.getPrice());
-        statement.setString(4, product.getCategory());
-        statement.setInt(5, product.getStock());
-        statement.setInt(6, product.getId());
-        statement.setInt(7, product.getSellerId());
+                    product.setId(resultSet.getInt("id"));
+                    product.setName(resultSet.getString("name"));
+                    product.setDescription(resultSet.getString("description"));
+                    product.setPrice(resultSet.getDouble("price"));
+                    product.setCategory(resultSet.getString("category"));
+                    product.setStock(resultSet.getInt("stock"));
+                    product.setSellerId(resultSet.getInt("seller_id"));
 
-        int rows = statement.executeUpdate();
+                    products.add(product);
+                }
+            }
 
-        return rows > 0;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
-    }
-}
-public Product getProductById(int productId, int sellerId) {
-
-    String sql = "SELECT id, name, description, price, category, stock " +
-                 "FROM products WHERE id = ? AND seller_id = ?";
-
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
-
-        statement.setInt(1, productId);
-        statement.setInt(2, sellerId);
-
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-
-            Product product = new Product();
-
-            product.setId(resultSet.getInt("id"));
-            product.setName(resultSet.getString("name"));
-            product.setDescription(resultSet.getString("description"));
-            product.setPrice(resultSet.getDouble("price"));
-            product.setCategory(resultSet.getString("category"));
-            product.setStock(resultSet.getInt("stock"));
-            product.setSellerId(sellerId);
-
-            return product;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-    } catch (Exception e) {
-        e.printStackTrace();
+        return products;
     }
 
-    return null;
-}
+    // GET ONE PRODUCT BY ID AND SELLER ID
+    // THIS FIXES YOUR CURRENT BUILD ERROR
+    public Product getProductById(int productId, int sellerId) {
+
+        String sql = "SELECT id, name, description, price, category, stock, seller_id " +
+                "FROM products WHERE id = ? AND seller_id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, productId);
+            statement.setInt(2, sellerId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                if (resultSet.next()) {
+
+                    Product product = new Product();
+
+                    product.setId(resultSet.getInt("id"));
+                    product.setName(resultSet.getString("name"));
+                    product.setDescription(resultSet.getString("description"));
+                    product.setPrice(resultSet.getDouble("price"));
+                    product.setCategory(resultSet.getString("category"));
+                    product.setStock(resultSet.getInt("stock"));
+                    product.setSellerId(resultSet.getInt("seller_id"));
+
+                    return product;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    // DELETE PRODUCT
+    public boolean deleteProduct(int productId, int sellerId) {
+
+        String sql = "DELETE FROM products WHERE id = ? AND seller_id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, productId);
+            statement.setInt(2, sellerId);
+
+            return statement.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // UPDATE PRODUCT
+    public boolean updateProduct(Product product) {
+
+        String sql = "UPDATE products SET " +
+                "name = ?, description = ?, price = ?, " +
+                "category = ?, stock = ? " +
+                "WHERE id = ? AND seller_id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, product.getName());
+            statement.setString(2, product.getDescription());
+            statement.setDouble(3, product.getPrice());
+            statement.setString(4, product.getCategory());
+            statement.setInt(5, product.getStock());
+            statement.setInt(6, product.getId());
+            statement.setInt(7, product.getSellerId());
+
+            return statement.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

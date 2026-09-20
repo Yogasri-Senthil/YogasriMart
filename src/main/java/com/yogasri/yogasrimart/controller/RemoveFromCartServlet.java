@@ -8,44 +8,32 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/add-to-cart")
-public class AddToCartServlet extends HttpServlet {
+@WebServlet("/remove-from-cart")
+public class RemoveFromCartServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request,
                            HttpServletResponse response)
             throws ServletException, IOException {
 
-        String id = request.getParameter("id");
-        String name = request.getParameter("name");
-        String price = request.getParameter("price");
-        String sellerId = request.getParameter("sellerId");
-
         HttpSession session = request.getSession();
 
         List<Map<String, String>> cart =
                 (List<Map<String, String>>) session.getAttribute("cart");
 
-        if (cart == null) {
-            cart = new ArrayList<>();
+        String productId = request.getParameter("id");
+
+        if (cart != null && productId != null) {
+
+            cart.removeIf(product ->
+                    productId.equals(product.get("id"))
+            );
+
+            session.setAttribute("cart", cart);
         }
-
-        Map<String, String> product = new HashMap<>();
-
-        product.put("id", id);
-        product.put("name", name);
-        product.put("price", price);
-        product.put("sellerId", sellerId);
-        product.put("quantity", "1");
-
-        cart.add(product);
-
-        session.setAttribute("cart", cart);
 
         response.sendRedirect("cart.jsp");
     }
