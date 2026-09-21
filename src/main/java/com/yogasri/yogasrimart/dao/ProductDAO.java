@@ -15,8 +15,8 @@ public class ProductDAO {
     public boolean addProduct(Product product) {
 
         String sql = "INSERT INTO products " +
-                "(name, description, price, category, stock, seller_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                "(name, description, price, category, stock, seller_id, image_path) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -27,6 +27,7 @@ public class ProductDAO {
             statement.setString(4, product.getCategory());
             statement.setInt(5, product.getStock());
             statement.setInt(6, product.getSellerId());
+            statement.setString(7, product.getImagePath());
 
             return statement.executeUpdate() > 0;
 
@@ -36,12 +37,14 @@ public class ProductDAO {
         }
     }
 
+
     // GET ALL PRODUCTS
     public List<Product> getAllProducts() {
 
         List<Product> products = new ArrayList<>();
 
-        String sql = "SELECT id, name, description, price, category, stock, seller_id " +
+        String sql = "SELECT id, name, description, price, category, " +
+                "stock, seller_id, image_path " +
                 "FROM products ORDER BY id DESC";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -60,6 +63,11 @@ public class ProductDAO {
                 product.setStock(resultSet.getInt("stock"));
                 product.setSellerId(resultSet.getInt("seller_id"));
 
+                // Product image
+                product.setImagePath(
+                        resultSet.getString("image_path")
+                );
+
                 products.add(product);
             }
 
@@ -70,13 +78,17 @@ public class ProductDAO {
         return products;
     }
 
+
     // GET PRODUCTS BY SELLER
     public List<Product> getProductsBySeller(int sellerId) {
 
         List<Product> products = new ArrayList<>();
 
-        String sql = "SELECT id, name, description, price, category, stock, seller_id " +
-                "FROM products WHERE seller_id = ? ORDER BY id DESC";
+        String sql = "SELECT id, name, description, price, category, " +
+                "stock, seller_id, image_path " +
+                "FROM products " +
+                "WHERE seller_id = ? " +
+                "ORDER BY id DESC";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -97,6 +109,11 @@ public class ProductDAO {
                     product.setStock(resultSet.getInt("stock"));
                     product.setSellerId(resultSet.getInt("seller_id"));
 
+                    // Product image
+                    product.setImagePath(
+                            resultSet.getString("image_path")
+                    );
+
                     products.add(product);
                 }
             }
@@ -108,12 +125,14 @@ public class ProductDAO {
         return products;
     }
 
+
     // GET ONE PRODUCT BY ID AND SELLER ID
-    // THIS FIXES YOUR CURRENT BUILD ERROR
     public Product getProductById(int productId, int sellerId) {
 
-        String sql = "SELECT id, name, description, price, category, stock, seller_id " +
-                "FROM products WHERE id = ? AND seller_id = ?";
+        String sql = "SELECT id, name, description, price, category, " +
+                "stock, seller_id, image_path " +
+                "FROM products " +
+                "WHERE id = ? AND seller_id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -135,6 +154,11 @@ public class ProductDAO {
                     product.setStock(resultSet.getInt("stock"));
                     product.setSellerId(resultSet.getInt("seller_id"));
 
+                    // Product image
+                    product.setImagePath(
+                            resultSet.getString("image_path")
+                    );
+
                     return product;
                 }
             }
@@ -146,10 +170,12 @@ public class ProductDAO {
         return null;
     }
 
+
     // DELETE PRODUCT
     public boolean deleteProduct(int productId, int sellerId) {
 
-        String sql = "DELETE FROM products WHERE id = ? AND seller_id = ?";
+        String sql = "DELETE FROM products " +
+                "WHERE id = ? AND seller_id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -165,12 +191,13 @@ public class ProductDAO {
         }
     }
 
+
     // UPDATE PRODUCT
     public boolean updateProduct(Product product) {
 
         String sql = "UPDATE products SET " +
                 "name = ?, description = ?, price = ?, " +
-                "category = ?, stock = ? " +
+                "category = ?, stock = ?, image_path = ? " +
                 "WHERE id = ? AND seller_id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -181,8 +208,9 @@ public class ProductDAO {
             statement.setDouble(3, product.getPrice());
             statement.setString(4, product.getCategory());
             statement.setInt(5, product.getStock());
-            statement.setInt(6, product.getId());
-            statement.setInt(7, product.getSellerId());
+            statement.setString(6, product.getImagePath());
+            statement.setInt(7, product.getId());
+            statement.setInt(8, product.getSellerId());
 
             return statement.executeUpdate() > 0;
 
