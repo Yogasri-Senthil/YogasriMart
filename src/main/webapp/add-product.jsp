@@ -87,20 +87,6 @@
             resize: vertical;
         }
 
-        /* Product Image */
-
-        .image-input {
-            padding: 9px;
-            background: #f8fafc;
-            cursor: pointer;
-        }
-
-        .image-note {
-            margin-top: 7px;
-            color: #777;
-            font-size: 13px;
-        }
-
         .btn {
             width: 100%;
             margin-top: 25px;
@@ -132,11 +118,7 @@
 
 </head>
 
-
 <body>
-
-
-<!-- Navigation -->
 
 <div class="navbar">
 
@@ -151,34 +133,22 @@
 </div>
 
 
-<!-- Main Container -->
-
 <div class="container">
-
 
     <div class="form-card">
 
-
         <h1>
-            Add Product
+            ➕ Add Product
         </h1>
-
 
         <p class="subtitle">
             Add a new product to YogasriMart
         </p>
 
 
-        <!-- IMPORTANT:
-             enctype is required for image upload
-        -->
+        <form action="${pageContext.request.contextPath}/add-product"
+              method="post">
 
-        <form action="add-product"
-              method="post"
-              enctype="multipart/form-data">
-
-
-            <!-- Product Name -->
 
             <label for="productName">
                 Product Name
@@ -192,8 +162,6 @@
                     required
             >
 
-
-            <!-- Category -->
 
             <label for="category">
                 Category
@@ -232,8 +200,6 @@
             </select>
 
 
-            <!-- Price -->
-
             <label for="price">
                 Price (&#8377;)
             </label>
@@ -249,8 +215,6 @@
             >
 
 
-            <!-- Quantity -->
-
             <label for="quantity">
                 Quantity
             </label>
@@ -265,8 +229,6 @@
             >
 
 
-            <!-- Description -->
-
             <label for="description">
                 Description
             </label>
@@ -279,28 +241,6 @@
             ></textarea>
 
 
-            <!-- PRODUCT IMAGE -->
-
-            <label for="productImage">
-                Product Image
-            </label>
-
-            <input
-                    type="file"
-                    id="productImage"
-                    name="productImage"
-                    class="image-input"
-                    accept="image/jpeg,image/png,image/webp"
-                    required
-            >
-
-            <p class="image-note">
-                Upload JPG, PNG or WEBP image of your product.
-            </p>
-
-
-            <!-- Submit -->
-
             <button
                     type="submit"
                     class="btn"
@@ -308,25 +248,20 @@
                 Add Product
             </button>
 
-
         </form>
 
-
-        <!-- Back -->
 
         <div class="back">
 
             <a href="seller.jsp">
-                &larr; Back to Seller Dashboard
+                ← Back to Seller Dashboard
             </a>
 
         </div>
 
-
     </div>
 
 </div>
-
 
 </body>
 

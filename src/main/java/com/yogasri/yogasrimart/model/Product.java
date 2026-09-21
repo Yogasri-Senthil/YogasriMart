@@ -10,13 +10,8 @@ public class Product {
     private int stock;
     private int sellerId;
 
-    // NEW: Product image
-    private String imagePath;
-
-
     public Product() {
     }
-
 
     public Product(String name, String description, double price,
                    String category, int stock) {
@@ -28,7 +23,6 @@ public class Product {
         this.stock = stock;
     }
 
-
     public int getId() {
         return id;
     }
@@ -36,7 +30,6 @@ public class Product {
     public void setId(int id) {
         this.id = id;
     }
-
 
     public String getName() {
         return name;
@@ -46,7 +39,6 @@ public class Product {
         this.name = name;
     }
 
-
     public String getDescription() {
         return description;
     }
@@ -54,7 +46,6 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     public double getPrice() {
         return price;
@@ -64,7 +55,6 @@ public class Product {
         this.price = price;
     }
 
-
     public String getCategory() {
         return category;
     }
@@ -72,7 +62,6 @@ public class Product {
     public void setCategory(String category) {
         this.category = category;
     }
-
 
     public int getStock() {
         return stock;
@@ -82,7 +71,6 @@ public class Product {
         this.stock = stock;
     }
 
-
     public int getSellerId() {
         return sellerId;
     }
@@ -90,16 +78,4 @@ public class Product {
     public void setSellerId(int sellerId) {
         this.sellerId = sellerId;
     }
-
-
-    // NEW: Image path
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
 }

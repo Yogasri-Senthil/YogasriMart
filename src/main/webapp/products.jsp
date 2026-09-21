@@ -144,6 +144,8 @@
             transform: translateY(-6px);
         }
 
+        /* OLD PRODUCT ICON */
+
         .product-image {
             font-size: 75px;
             margin-bottom: 15px;
@@ -324,44 +326,32 @@
 
     <a href="products"
        class="category-btn">
-
         All
-
     </a>
 
     <a href="products?category=Electronics"
        class="category-btn">
-
         💻 Electronics
-
     </a>
 
     <a href="products?category=Fashion"
        class="category-btn">
-
         👗 Fashion
-
     </a>
 
     <a href="products?category=Beauty"
        class="category-btn">
-
         💄 Beauty
-
     </a>
 
     <a href="products?category=Home"
        class="category-btn">
-
         🏠 Home
-
     </a>
 
     <a href="products?category=Accessories"
        class="category-btn">
-
         🎧 Accessories
-
     </a>
 
 </div>
@@ -389,48 +379,38 @@
          data-category="<%= product.getCategory() %>">
 
 
-        <!-- PRODUCT IMAGE -->
+        <!-- OLD PRODUCT ICON -->
 
         <div class="product-image">
-
             🛍️
-
         </div>
 
 
         <!-- PRODUCT NAME -->
 
         <h3>
-
             <%= product.getName() %>
-
         </h3>
 
 
         <!-- DESCRIPTION -->
 
         <p class="description">
-
             <%= product.getDescription() %>
-
         </p>
 
 
         <!-- CATEGORY -->
 
         <p style="margin-top:8px;color:#777;font-size:13px;">
-
             <%= product.getCategory() %>
-
         </p>
 
 
         <!-- PRICE -->
 
         <div class="price">
-
             ₹<%= String.format("%.0f", product.getPrice()) %>
-
         </div>
 
 
@@ -449,24 +429,20 @@
                     name="id"
                     value="<%= product.getId() %>">
 
-
                 <input
                     type="hidden"
                     name="name"
                     value="<%= product.getName() %>">
-
 
                 <input
                     type="hidden"
                     name="price"
                     value="<%= product.getPrice() %>">
 
-
                 <input
                     type="hidden"
                     name="sellerId"
                     value="<%= product.getSellerId() %>">
-
 
                 <button
                     type="submit"
@@ -484,30 +460,25 @@
             <form action="add-to-wishlist"
                   method="post">
 
-
                 <input
                     type="hidden"
                     name="id"
                     value="<%= product.getId() %>">
-
 
                 <input
                     type="hidden"
                     name="name"
                     value="<%= product.getName() %>">
 
-
                 <input
                     type="hidden"
                     name="price"
                     value="<%= product.getPrice() %>">
 
-
                 <input
                     type="hidden"
                     name="sellerId"
                     value="<%= product.getSellerId() %>">
-
 
                 <button
                     type="submit"
@@ -542,9 +513,7 @@
         </h2>
 
         <p style="margin-top:10px;">
-
             Seller has not added any products yet.
-
         </p>
 
     </div>
@@ -565,10 +534,8 @@
 <footer>
 
     <p>
-
         © 2026 YogasriMart |
         Shop Smart. Live Better. 💙
-
     </p>
 
 </footer>
