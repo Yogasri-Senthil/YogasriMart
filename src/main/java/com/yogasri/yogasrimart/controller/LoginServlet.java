@@ -27,30 +27,57 @@ public class LoginServlet extends HttpServlet {
 
         User user = userDAO.findByEmail(email);
 
-        if (user != null && user.getPassword().equals(password)) {
 
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+        // USER NOT REGISTERED
 
-            // ADMIN
-            if ("ADMIN".equals(user.getRole())) {
+        if (user == null) {
 
-                response.sendRedirect("admin.jsp");
+            response.sendRedirect("login.jsp?error=notregistered");
 
-            // SELLER
-            } else if ("SELLER".equals(user.getRole())) {
+            return;
+        }
 
-                response.sendRedirect("seller.jsp");
 
-            // BUYER
-            } else {
+        // WRONG PASSWORD
 
-                response.sendRedirect("home.jsp");
-            }
-
-        } else {
+        if (!user.getPassword().equals(password)) {
 
             response.sendRedirect("login.jsp?error=invalid");
+
+            return;
         }
+
+
+        // LOGIN SUCCESS
+
+        HttpSession session = request.getSession();
+
+        session.setAttribute("user", user);
+
+
+        // ADMIN
+
+        if ("ADMIN".equals(user.getRole())) {
+
+            response.sendRedirect("admin.jsp");
+
+        }
+
+        // SELLER
+
+        else if ("SELLER".equals(user.getRole())) {
+
+            response.sendRedirect("seller.jsp");
+
+        }
+
+        // BUYER
+
+        else {
+
+            response.sendRedirect("home.jsp");
+
+        }
+
     }
 }
