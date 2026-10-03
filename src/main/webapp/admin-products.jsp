@@ -121,6 +121,20 @@
             font-weight: bold;
         }
 
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
         .empty {
             text-align: center;
             padding: 45px;
@@ -182,9 +196,6 @@
 
 <body>
 
-
-<!-- Navigation -->
-
 <div class="navbar">
 
     <div class="logo">
@@ -197,13 +208,7 @@
 
 </div>
 
-
-<!-- Main Container -->
-
 <div class="container">
-
-
-    <!-- Heading -->
 
     <div class="welcome">
 
@@ -217,13 +222,9 @@
 
     </div>
 
-
-    <!-- Product Table -->
-
     <div class="table-container">
 
         <% if (products == null || products.isEmpty()) { %>
-
 
             <div class="empty">
 
@@ -237,9 +238,7 @@
 
             </div>
 
-
         <% } else { %>
-
 
             <table>
 
@@ -275,13 +274,15 @@
                         Seller ID
                     </th>
 
+                    <th>
+                        Action
+                    </th>
+
                 </tr>
 
                 </thead>
 
-
                 <tbody>
-
 
                 <% for (Product product : products) { %>
 
@@ -291,70 +292,70 @@
                             <%= product.getId() %>
                         </td>
 
-
                         <td class="product-name">
                             <%= product.getName() %>
                         </td>
-
 
                         <td>
                             <%= product.getDescription() %>
                         </td>
 
-
                         <td class="price">
-
                             &#8377;<%= String.format("%.2f", product.getPrice()) %>
-
                         </td>
-
 
                         <td>
                             <%= product.getCategory() %>
                         </td>
 
-
                         <td class="stock">
                             <%= product.getStock() %>
                         </td>
 
-
                         <td>
                             <%= product.getSellerId() %>
+                        </td>
+
+                        <td>
+
+                            <form action="admin-delete-product"
+                                  method="post"
+                                  onsubmit="return confirm('Are you sure you want to delete this product?');">
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="<%= product.getId() %>">
+
+                                <button type="submit"
+                                        class="delete-btn">
+                                    Delete 🗑️
+                                </button>
+
+                            </form>
+
                         </td>
 
                     </tr>
 
                 <% } %>
 
-
                 </tbody>
 
             </table>
-
 
         <% } %>
 
     </div>
 
-
-    <!-- Back Button -->
-
     <div class="back">
 
         <a href="admin.jsp">
-
             &larr; Back to Admin Dashboard
-
         </a>
 
     </div>
 
-
 </div>
-
-
-<!-- Footer -->
 
 <footer>
 

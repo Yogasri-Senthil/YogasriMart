@@ -112,4 +112,19 @@ public class UserDAO {
 
         return users;
     }
+    public boolean deleteUserByAdmin(int userId) {
+    String sql = "DELETE FROM users WHERE id = ?";
+
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        statement.setInt(1, userId);
+
+        return statement.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        return false;
+        }
+    }
 }

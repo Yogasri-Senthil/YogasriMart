@@ -120,6 +120,26 @@
             color: #b45309;
         }
 
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
+        .admin-action {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
         .back {
             text-align: center;
             margin-top: 30px;
@@ -154,8 +174,6 @@
 
 <body>
 
-<!-- Navigation -->
-
 <div class="navbar">
 
     <div class="logo">
@@ -167,9 +185,6 @@
     </div>
 
 </div>
-
-
-<!-- Main -->
 
 <div class="container">
 
@@ -185,7 +200,6 @@
 
     </div>
 
-
     <div class="table-card">
 
         <table>
@@ -198,6 +212,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Action</th>
 
             </tr>
 
@@ -248,6 +263,35 @@
 
                 </td>
 
+                <td>
+
+                    <% if ("ADMIN".equalsIgnoreCase(user.getRole())) { %>
+
+                        <span class="admin-action">
+                            Protected
+                        </span>
+
+                    <% } else { %>
+
+                        <form action="admin-delete-user"
+                              method="post"
+                              onsubmit="return confirm('Are you sure you want to delete this user?');">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="<%= user.getId() %>">
+
+                            <button type="submit"
+                                    class="delete-btn">
+                                Delete 🗑️
+                            </button>
+
+                        </form>
+
+                    <% } %>
+
+                </td>
+
             </tr>
 
             <%
@@ -258,7 +302,7 @@
 
             <tr>
 
-                <td colspan="4"
+                <td colspan="5"
                     style="text-align:center; padding:25px;">
 
                     No users found.
@@ -277,7 +321,6 @@
 
     </div>
 
-
     <div class="back">
 
         <a href="admin.jsp">
@@ -287,9 +330,6 @@
     </div>
 
 </div>
-
-
-<!-- Footer -->
 
 <footer>
 

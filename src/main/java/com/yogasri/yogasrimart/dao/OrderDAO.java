@@ -30,8 +30,7 @@ public class OrderDAO {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, buyerId);
             statement.setInt(2, sellerId);
@@ -66,8 +65,7 @@ public class OrderDAO {
                 "ORDER BY o.id DESC";
 
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, sellerId);
 
@@ -101,9 +99,55 @@ public class OrderDAO {
         return orders;
     }
 
+    public List<OrderData> getAllOrders() {
+
+        List<OrderData> orders = new ArrayList<>();
+
+        String sql =
+                "SELECT o.*, p.image_path " +
+                "FROM orders o " +
+                "LEFT JOIN products p ON o.product_id = p.id " +
+                "ORDER BY o.id DESC";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+
+                OrderData order = new OrderData();
+
+                order.id = rs.getInt("id");
+                order.buyerId = rs.getInt("buyer_id");
+                order.sellerId = rs.getInt("seller_id");
+                order.productId = rs.getInt("product_id");
+                order.productName = rs.getString("product_name");
+                order.imagePath = rs.getString("image_path");
+                order.quantity = rs.getInt("quantity");
+                order.totalPrice = rs.getDouble("total_price");
+                order.customerName = rs.getString("customer_name");
+                order.address = rs.getString("address");
+                order.city = rs.getString("city");
+                order.pincode = rs.getString("pincode");
+                order.paymentMethod = rs.getString("payment_method");
+                order.status = rs.getString("status");
+                order.createdAt = rs.getTimestamp("created_at");
+
+                orders.add(order);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+
     public static class OrderData {
 
         public int id;
+        public int buyerId;
+        public int sellerId;
         public int productId;
         public String productName;
         public String imagePath;
@@ -115,5 +159,6 @@ public class OrderDAO {
         public String pincode;
         public String paymentMethod;
         public String status;
+        public java.sql.Timestamp createdAt;
     }
 }

@@ -1,9 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.PreparedStatement" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="com.yogasri.yogasrimart.util.DatabaseConnection" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.yogasri.yogasrimart.dao.OrderDAO" %>
+<%@ page import="com.yogasri.yogasrimart.dao.OrderDAO.OrderData" %>
+
+<%
+    OrderDAO orderDAO = new OrderDAO();
+    List<OrderData> orders = orderDAO.getAllOrders();
+%>
 
 <!DOCTYPE html>
 <html>
@@ -130,14 +134,6 @@
             color: #666;
         }
 
-        .error {
-            text-align: center;
-            padding: 30px;
-            color: #dc2626;
-            background: #fee2e2;
-            border-radius: 10px;
-        }
-
         .back {
             text-align: center;
             margin-top: 35px;
@@ -184,9 +180,6 @@
 
 <body>
 
-
-<!-- Navigation -->
-
 <div class="navbar">
 
     <div class="logo">
@@ -199,13 +192,7 @@
 
 </div>
 
-
-<!-- Main Container -->
-
 <div class="container">
-
-
-    <!-- Heading -->
 
     <div class="welcome">
 
@@ -219,197 +206,9 @@
 
     </div>
 
-
     <div class="table-container">
 
-
-        <%
-            String sql =
-                    "SELECT id, buyer_id, seller_id, product_id, " +
-                    "product_name, quantity, total_price, " +
-                    "customer_name, address, city, pincode, " +
-                    "payment_method, status, created_at " +
-                    "FROM orders ORDER BY id DESC";
-
-            boolean hasOrders = false;
-
-            try (
-                    Connection connection =
-                            DatabaseConnection.getConnection();
-
-                    PreparedStatement statement =
-                            connection.prepareStatement(sql);
-
-                    ResultSet resultSet =
-                            statement.executeQuery()
-            ) {
-
-        %>
-
-
-        <table>
-
-            <thead>
-
-            <tr>
-
-                <th>
-                    Order ID
-                </th>
-
-                <th>
-                    Buyer ID
-                </th>
-
-                <th>
-                    Seller ID
-                </th>
-
-                <th>
-                    Product ID
-                </th>
-
-                <th>
-                    Product Name
-                </th>
-
-                <th>
-                    Quantity
-                </th>
-
-                <th>
-                    Total Price
-                </th>
-
-                <th>
-                    Customer Name
-                </th>
-
-                <th>
-                    Address
-                </th>
-
-                <th>
-                    City
-                </th>
-
-                <th>
-                    Pincode
-                </th>
-
-                <th>
-                    Payment
-                </th>
-
-                <th>
-                    Status
-                </th>
-
-                <th>
-                    Date
-                </th>
-
-            </tr>
-
-            </thead>
-
-
-            <tbody>
-
-
-            <%
-
-                while (resultSet.next()) {
-
-                    hasOrders = true;
-
-            %>
-
-
-                <tr>
-
-                    <td class="order-id">
-                        <%= resultSet.getInt("id") %>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getInt("buyer_id") %>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getInt("seller_id") %>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getInt("product_id") %>
-                    </td>
-
-                    <td>
-                        <strong>
-                            <%= resultSet.getString("product_name") %>
-                        </strong>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getInt("quantity") %>
-                    </td>
-
-                    <td class="price">
-                        &#8377;<%= String.format(
-                                "%.2f",
-                                resultSet.getDouble("total_price")
-                        ) %>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getString("customer_name") %>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getString("address") %>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getString("city") %>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getString("pincode") %>
-                    </td>
-
-                    <td>
-                        <%= resultSet.getString("payment_method") %>
-                    </td>
-
-                    <td>
-
-                        <span class="status">
-                            <%= resultSet.getString("status") %>
-                        </span>
-
-                    </td>
-
-                    <td>
-                        <%= resultSet.getTimestamp("created_at") %>
-                    </td>
-
-                </tr>
-
-            <%
-
-                }
-
-            %>
-
-            </tbody>
-
-        </table>
-
-        <%
-
-            if (!hasOrders) {
-
-        %>
+        <% if (orders == null || orders.isEmpty()) { %>
 
             <div class="empty">
 
@@ -423,37 +222,153 @@
 
             </div>
 
-        <%
+        <% } else { %>
 
-            }
+            <table>
 
-        } catch (Exception e) {
+                <thead>
 
-        %>
+                <tr>
 
-            <div class="error">
+                    <th>
+                        Order ID
+                    </th>
 
-                <h2>
-                    Unable to Load Orders
-                </h2>
+                    <th>
+                        Buyer ID
+                    </th>
 
-                <p>
-                    Please check the database connection.
-                </p>
+                    <th>
+                        Seller ID
+                    </th>
 
-            </div>
+                    <th>
+                        Product ID
+                    </th>
 
-        <%
+                    <th>
+                        Product Name
+                    </th>
 
-                e.printStackTrace();
+                    <th>
+                        Quantity
+                    </th>
 
-            }
+                    <th>
+                        Total Price
+                    </th>
 
-        %>
+                    <th>
+                        Customer Name
+                    </th>
+
+                    <th>
+                        Address
+                    </th>
+
+                    <th>
+                        City
+                    </th>
+
+                    <th>
+                        Pincode
+                    </th>
+
+                    <th>
+                        Payment
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <% for (OrderData order : orders) { %>
+
+                    <tr>
+
+                        <td class="order-id">
+                            <%= order.id %>
+                        </td>
+
+                        <td>
+                            <%= order.buyerId %>
+                        </td>
+
+                        <td>
+                            <%= order.sellerId %>
+                        </td>
+
+                        <td>
+                            <%= order.productId %>
+                        </td>
+
+                        <td>
+                            <strong>
+                                <%= order.productName %>
+                            </strong>
+                        </td>
+
+                        <td>
+                            <%= order.quantity %>
+                        </td>
+
+                        <td class="price">
+                            &#8377;<%= String.format("%.2f", order.totalPrice) %>
+                        </td>
+
+                        <td>
+                            <%= order.customerName %>
+                        </td>
+
+                        <td>
+                            <%= order.address %>
+                        </td>
+
+                        <td>
+                            <%= order.city %>
+                        </td>
+
+                        <td>
+                            <%= order.pincode %>
+                        </td>
+
+                        <td>
+                            <%= order.paymentMethod %>
+                        </td>
+
+                        <td>
+
+                            <span class="status">
+                                <%= order.status %>
+                            </span>
+
+                        </td>
+
+                        <td>
+                            <%= order.createdAt %>
+                        </td>
+
+                    </tr>
+
+                <% } %>
+
+                </tbody>
+
+            </table>
+
+        <% } %>
 
     </div>
-
-    <!-- Back Button -->
 
     <div class="back">
 
@@ -463,10 +378,7 @@
 
     </div>
 
-
 </div>
-
-<!-- Footer -->
 
 <footer>
 

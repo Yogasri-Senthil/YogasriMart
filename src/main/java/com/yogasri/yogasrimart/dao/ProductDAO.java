@@ -169,6 +169,22 @@ public class ProductDAO {
         }
     }
 
+    public boolean deleteProductByAdmin(int productId) {
+    String sql = "DELETE FROM products WHERE id = ?";
+
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        statement.setInt(1, productId);
+
+        return statement.executeUpdate() > 0;
+
+       } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+       }
+    }
+
     public boolean updateProduct(Product product) {
 
         String sql = "UPDATE products SET " +
