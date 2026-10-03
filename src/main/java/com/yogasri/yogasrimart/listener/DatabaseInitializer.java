@@ -38,11 +38,15 @@ public class DatabaseInitializer implements ServletContextListener {
                     StandardCharsets.UTF_8
             );
 
-            try (Statement statement = connection.createStatement()) {
+           try (Statement statement = connection.createStatement()) {
 
                 statement.execute(sql);
 
-            }
+                statement.executeUpdate(
+            "ALTER TABLE products ADD COLUMN IF NOT EXISTS image_path VARCHAR(255)"
+    );
+
+}
 
             System.out.println("Database tables created successfully.");
 

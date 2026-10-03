@@ -30,4 +30,4 @@ public class RegisterServlet extends HttpServlet {
             response.sendRedirect("register.jsp?error=failed");
         }
     }
-}
+} 

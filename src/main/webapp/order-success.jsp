@@ -63,15 +63,19 @@
     <div class="success-icon">
         ✅
     </div>
+
     <h1>Order Placed Successfully!</h1>
+
     <p>
         Thank you for shopping with YogasriMart.
         Your order has been placed successfully.
     </p>
+
     <a href="home.jsp" class="home-btn">
         Go to Home
     </a>
-    <a href="products.jsp" class="products-btn">
+
+    <a href="products" class="products-btn">
         Continue Shopping
     </a>
 </div>

@@ -25,6 +25,7 @@ public class AddToCartServlet extends HttpServlet {
         String name = request.getParameter("name");
         String price = request.getParameter("price");
         String sellerId = request.getParameter("sellerId");
+        String imagePath = request.getParameter("imagePath");
 
         HttpSession session = request.getSession();
 
@@ -41,6 +42,7 @@ public class AddToCartServlet extends HttpServlet {
         product.put("name", name);
         product.put("price", price);
         product.put("sellerId", sellerId);
+        product.put("imagePath", imagePath);
         product.put("quantity", "1");
 
         cart.add(product);

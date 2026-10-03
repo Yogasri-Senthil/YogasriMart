@@ -114,6 +114,12 @@
             font-weight: bold;
         }
 
+        .image-note {
+            color: #777;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
     </style>
 
 </head>
@@ -147,7 +153,8 @@
 
 
         <form action="${pageContext.request.contextPath}/add-product"
-              method="post">
+              method="post"
+              enctype="multipart/form-data">
 
 
             <label for="productName">
@@ -239,6 +246,25 @@
                     placeholder="Enter product description"
                     required
             ></textarea>
+
+
+            <!-- PRODUCT IMAGE -->
+
+            <label for="productImage">
+                Product Image
+            </label>
+
+            <input
+                    type="file"
+                    id="productImage"
+                    name="productImage"
+                    accept="image/jpeg,image/png,image/webp"
+                    required
+            >
+
+            <p class="image-note">
+                JPG, JPEG, PNG or WEBP • Maximum 5 MB
+            </p>
 
 
             <button

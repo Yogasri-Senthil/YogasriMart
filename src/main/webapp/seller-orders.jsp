@@ -52,8 +52,37 @@
             box-shadow: 0 3px 12px rgba(0,0,0,0.08);
         }
 
-        .order-card h2 {
-            margin-top: 0;
+        .product-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-icon {
+            font-size: 70px;
+        }
+
+        .product-info h2 {
+            margin: 0;
         }
 
         .price {
@@ -86,6 +115,20 @@
             font-weight: bold;
         }
 
+        @media (max-width: 600px) {
+
+            .product-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .product-image {
+                width: 130px;
+                height: 130px;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -113,7 +156,9 @@
 %>
 
         <div class="empty">
+
             <h2>Seller login required</h2>
+
         </div>
 
 <%
@@ -149,9 +194,42 @@
 
             <div class="order-card">
 
-                <h2>
-                    🛍️ <%= order.productName %>
-                </h2>
+                <div class="product-section">
+
+                    <div class="product-image">
+
+                        <%
+                            if (order.imagePath != null
+                                    && !order.imagePath.trim().isEmpty()) {
+                        %>
+
+                            <img
+                                src="<%= request.getContextPath() %>/<%= order.imagePath %>"
+                                alt="<%= order.productName %>">
+
+                        <%
+                            } else {
+                        %>
+
+                            <div class="product-icon">
+                                🛍️
+                            </div>
+
+                        <%
+                            }
+                        %>
+
+                    </div>
+
+                    <div class="product-info">
+
+                        <h2>
+                            <%= order.productName %>
+                        </h2>
+
+                    </div>
+
+                </div>
 
                 <p>
                     <strong>Order ID:</strong>
@@ -188,9 +266,11 @@
 
                 <p>
                     <strong>Status:</strong>
+
                     <span class="status">
                         <%= order.status %>
                     </span>
+
                 </p>
 
             </div>

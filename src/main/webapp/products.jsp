@@ -25,8 +25,6 @@
             color: #222;
         }
 
-        /* NAVBAR */
-
         .navbar {
             background: #111827;
             color: white;
@@ -56,8 +54,6 @@
             color: #38bdf8;
         }
 
-        /* HEADER */
-
         .page-header {
             text-align: center;
             padding: 40px 20px 20px;
@@ -72,8 +68,6 @@
             color: #666;
             font-size: 17px;
         }
-
-        /* SEARCH */
 
         .search-box {
             text-align: center;
@@ -93,8 +87,6 @@
         .search-box input:focus {
             border-color: #0284c7;
         }
-
-        /* CATEGORY BUTTONS */
 
         .categories {
             display: flex;
@@ -122,8 +114,6 @@
             color: white;
         }
 
-        /* PRODUCTS */
-
         .products {
             padding: 0 7% 50px;
             display: grid;
@@ -144,11 +134,22 @@
             transform: translateY(-6px);
         }
 
-        /* OLD PRODUCT ICON */
-
         .product-image {
-            font-size: 75px;
+            width: 100%;
+            height: 220px;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .product-card h3 {
@@ -167,8 +168,6 @@
             font-weight: bold;
             margin: 12px 0;
         }
-
-        /* BUTTONS */
 
         .product-buttons {
             display: flex;
@@ -202,8 +201,6 @@
             background: #fecaca;
         }
 
-        /* NO PRODUCTS */
-
         .no-products {
             grid-column: 1 / -1;
             background: white;
@@ -213,16 +210,12 @@
             box-shadow: 0 3px 12px rgba(0,0,0,0.08);
         }
 
-        /* FOOTER */
-
         footer {
             background: #111827;
             color: white;
             text-align: center;
             padding: 25px;
         }
-
-        /* MOBILE */
 
         @media (max-width: 1000px) {
 
@@ -257,11 +250,7 @@
 
 </head>
 
-
 <body>
-
-
-<!-- NAVIGATION -->
 
 <div class="navbar">
 
@@ -291,9 +280,6 @@
 
 </div>
 
-
-<!-- PAGE HEADER -->
-
 <section class="page-header">
 
     <h1>
@@ -306,9 +292,6 @@
 
 </section>
 
-
-<!-- SEARCH -->
-
 <div class="search-box">
 
     <input
@@ -318,9 +301,6 @@
         onkeyup="searchProducts()">
 
 </div>
-
-
-<!-- CATEGORY FILTER -->
 
 <div class="categories">
 
@@ -356,11 +336,7 @@
 
 </div>
 
-
-<!-- PRODUCTS -->
-
 <section class="products" id="productContainer">
-
 
 <%
 
@@ -373,53 +349,52 @@
 
 %>
 
-
     <div class="product-card"
          data-name="<%= product.getName() %>"
          data-category="<%= product.getCategory() %>">
 
-
-        <!-- OLD PRODUCT ICON -->
-
         <div class="product-image">
-            🛍️
+
+            <%
+                if (product.getImagePath() != null
+                        && !product.getImagePath().trim().isEmpty()) {
+            %>
+
+                <img
+                    src="<%= request.getContextPath() %>/<%= product.getImagePath() %>"
+                    alt="<%= product.getName() %>">
+
+            <%
+                } else {
+            %>
+
+                <div style="font-size:75px;">
+                    🛍️
+                </div>
+
+            <%
+                }
+            %>
+
         </div>
-
-
-        <!-- PRODUCT NAME -->
 
         <h3>
             <%= product.getName() %>
         </h3>
 
-
-        <!-- DESCRIPTION -->
-
         <p class="description">
             <%= product.getDescription() %>
         </p>
-
-
-        <!-- CATEGORY -->
 
         <p style="margin-top:8px;color:#777;font-size:13px;">
             <%= product.getCategory() %>
         </p>
 
-
-        <!-- PRICE -->
-
         <div class="price">
             ₹<%= String.format("%.0f", product.getPrice()) %>
         </div>
 
-
-        <!-- BUTTONS -->
-
         <div class="product-buttons">
-
-
-            <!-- ADD TO CART -->
 
             <form action="add-to-cart"
                   method="post">
@@ -444,6 +419,11 @@
                     name="sellerId"
                     value="<%= product.getSellerId() %>">
 
+                <input
+                    type="hidden"
+                    name="imagePath"
+                    value="<%= product.getImagePath() != null ? product.getImagePath() : "" %>">
+
                 <button
                     type="submit"
                     class="cart-btn">
@@ -453,9 +433,6 @@
                 </button>
 
             </form>
-
-
-            <!-- ADD TO WISHLIST -->
 
             <form action="add-to-wishlist"
                   method="post">
@@ -490,12 +467,9 @@
 
             </form>
 
-
         </div>
 
-
     </div>
-
 
 <%
 
@@ -504,7 +478,6 @@
     } else {
 
 %>
-
 
     <div class="no-products">
 
@@ -518,18 +491,13 @@
 
     </div>
 
-
 <%
 
     }
 
 %>
 
-
 </section>
-
-
-<!-- FOOTER -->
 
 <footer>
 
@@ -539,9 +507,6 @@
     </p>
 
 </footer>
-
-
-<!-- SEARCH JAVASCRIPT -->
 
 <script>
 
@@ -577,7 +542,6 @@ function searchProducts() {
 }
 
 </script>
-
 
 </body>
 

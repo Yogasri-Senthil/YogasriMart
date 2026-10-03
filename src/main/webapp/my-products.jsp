@@ -39,6 +39,24 @@
             box-shadow: 0 3px 12px rgba(0,0,0,0.08);
         }
 
+        .product-image {
+            width: 100%;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #f8fafc;
+            margin-bottom: 15px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .product h2 {
             color: #0284c7;
             margin-bottom: 10px;
@@ -53,8 +71,6 @@
         .stock {
             color: #555;
         }
-
-        /* Buttons */
 
         .button-group {
             display: flex;
@@ -89,8 +105,6 @@
             background: #b91c1c;
         }
 
-        /* Back Button */
-
         .back-btn {
             display: inline-block;
             margin-top: 30px;
@@ -105,15 +119,11 @@
             background: #374151;
         }
 
-        /* Empty */
-
         .empty {
             text-align: center;
             margin-top: 50px;
             color: #666;
         }
-
-        /* Mobile */
 
         @media (max-width: 800px) {
 
@@ -154,6 +164,31 @@
 
     <div class="product">
 
+        <div class="product-image">
+
+            <%
+                if (product.getImagePath() != null
+                        && !product.getImagePath().trim().isEmpty()) {
+            %>
+
+                <img
+                    src="<%= request.getContextPath() %>/<%= product.getImagePath() %>"
+                    alt="<%= product.getName() %>">
+
+            <%
+                } else {
+            %>
+
+                <div style="font-size:75px;">
+                    🛍️
+                </div>
+
+            <%
+                }
+            %>
+
+        </div>
+
         <h2>
             <%= product.getName() %>
         </h2>
@@ -178,12 +213,7 @@
             <%= product.getStock() %>
         </p>
 
-
-        <!-- Edit and Delete Buttons -->
-
         <div class="button-group">
-
-            <!-- Edit Product -->
 
             <a href="edit-product?id=<%= product.getId() %>"
                class="edit-btn">
@@ -191,9 +221,6 @@
                 Edit Product ✏️
 
             </a>
-
-
-            <!-- Delete Product -->
 
             <form action="delete-product"
                   method="post"
@@ -243,9 +270,13 @@
 <%
 
     }
+
 %>
+
 <a href="seller.jsp" class="back-btn">
     ← Back to Seller Dashboard
 </a>
+
 </body>
+
 </html>

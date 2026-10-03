@@ -5,18 +5,30 @@ import com.yogasri.yogasrimart.model.Product;
 import com.yogasri.yogasrimart.model.User;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @WebServlet("/add-product")
+@MultipartConfig(
+        maxFileSize = 5 * 1024 * 1024,
+        maxRequestSize = 10 * 1024 * 1024
+)
 public class AddProductServlet extends HttpServlet {
 
-    private ProductDAO productDAO = new ProductDAO();
+    private final ProductDAO productDAO = new ProductDAO();
+
+    private static final String UPLOAD_DIRECTORY =
+            "D:\\YogasriMart\\uploads\\products";
 
     @Override
     protected void doPost(HttpServletRequest request,
@@ -66,10 +78,70 @@ public class AddProductServlet extends HttpServlet {
             product.setPrice(price);
             product.setStock(stock);
             product.setDescription(description);
+            product.setSellerId(user.getId());
 
-            product.setSellerId(
-                    user.getId()
-            );
+            Part imagePart =
+                    request.getPart("productImage");
+
+            String imagePath = null;
+
+            if (imagePart != null &&
+                    imagePart.getSize() > 0) {
+
+                String originalFileName =
+                        Paths.get(
+                                imagePart.getSubmittedFileName()
+                        ).getFileName().toString();
+
+                String extension = "";
+
+                int dotIndex =
+                        originalFileName.lastIndexOf(".");
+
+                if (dotIndex >= 0) {
+                    extension =
+                            originalFileName
+                                    .substring(dotIndex)
+                                    .toLowerCase();
+                }
+
+                if (!extension.equals(".jpg") &&
+                        !extension.equals(".jpeg") &&
+                        !extension.equals(".png") &&
+                        !extension.equals(".webp")) {
+
+                    response.sendRedirect(
+                            "add-product.jsp?error=invalidimage"
+                    );
+                    return;
+                }
+
+                File uploadDirectory =
+                        new File(UPLOAD_DIRECTORY);
+
+                if (!uploadDirectory.exists()) {
+                    uploadDirectory.mkdirs();
+                }
+
+                String fileName =
+                        UUID.randomUUID().toString()
+                                + extension;
+
+                File imageFile =
+                        new File(
+                                uploadDirectory,
+                                fileName
+                        );
+
+                imagePart.write(
+                        imageFile.getAbsolutePath()
+                );
+
+                imagePath =
+                        "product-images/" + fileName;
+
+                product.setImagePath(imagePath);
+            }
 
             boolean added =
                     productDAO.addProduct(product);

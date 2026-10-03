@@ -65,7 +65,6 @@
             margin-bottom: 15px;
             border-radius: 12px;
             box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -75,6 +74,23 @@
             display: flex;
             align-items: center;
             gap: 20px;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .product-icon {
@@ -215,21 +231,17 @@
 
 </div>
 
-
 <div class="container">
 
     <h1>
         🛒 Your Shopping Cart
     </h1>
 
-
 <%
-
     List<Map<String, String>> cart =
             (List<Map<String, String>>) session.getAttribute("cart");
 
     double total = 0;
-
 
     if (cart != null && !cart.isEmpty()) {
 
@@ -239,202 +251,130 @@
 
             String priceString = product.get("price");
 
+            String imagePath = product.get("imagePath");
+
             double price =
                     Double.parseDouble(priceString);
 
             total += price;
-
 %>
-
 
     <div class="cart-item">
 
-
         <div class="product-info">
 
-
-            <div class="product-icon">
+            <div class="product-image">
 
                 <%
+                    if (imagePath != null
+                            && !imagePath.trim().isEmpty()) {
+                %>
 
-                    if (name.equals("Wireless Headphones")) {
+                    <img
+                        src="<%= request.getContextPath() %>/<%= imagePath %>"
+                        alt="<%= name %>">
 
-                        out.print("🎧");
-
-                    } else if (name.equals("Smart Watch")) {
-
-                        out.print("⌚");
-
-                    } else if (name.equals("Travel Backpack")) {
-
-                        out.print("🎒");
-
-                    } else if (name.equals("Sports Shoes")) {
-
-                        out.print("👟");
-
-                    } else if (name.equals("Laptop")) {
-
-                        out.print("💻");
-
-                    } else if (name.equals("Smart Phone")) {
-
-                        out.print("📱");
-
-                    } else if (name.equals("Women's Dress")) {
-
-                        out.print("👗");
-
-                    } else if (name.equals("Beauty Kit")) {
-
-                        out.print("💄");
-
+                <%
                     } else {
+                %>
 
-                        out.print("🛍️");
+                    <div class="product-icon">
+                        🛍️
+                    </div>
 
+                <%
                     }
-
                 %>
 
             </div>
 
-
             <div>
 
                 <div class="product-name">
-
                     <%= name %>
-
                 </div>
 
-
                 <div class="quantity">
-
                     Quantity: 1
-
                 </div>
 
             </div>
-
 
         </div>
 
-
         <div class="item-actions">
 
-
             <div class="price">
-
                 ₹<%= String.format("%.0f", price) %>
-
             </div>
-
 
             <form action="remove-from-cart"
                   method="post"
                   onsubmit="return confirm('Remove this product from cart?');">
 
-
                 <input type="hidden"
                        name="id"
                        value="<%= product.get("id") %>">
 
-
                 <button type="submit"
                         class="remove-btn">
-
                     🗑️ Remove
-
                 </button>
-
 
             </form>
 
-
         </div>
-
 
     </div>
 
-
 <%
-
         }
-
 %>
-
 
     <div class="total-box">
 
-
         <div class="total">
-
             Total:
             ₹<%= String.format("%.0f", total) %>
-
         </div>
-
 
         <a href="products"
            class="shop-btn">
-
             Continue Shopping
-
         </a>
-
 
         <a href="checkout.jsp"
            class="checkout-btn">
-
             Proceed to Checkout
-
         </a>
-
 
     </div>
 
-
 <%
-
     } else {
-
 %>
-
 
     <div class="empty">
 
         <h2>
-
             Your cart is empty 🛒
-
         </h2>
 
-
         <p style="margin-top:10px;">
-
             Add some products to your cart.
-
         </p>
-
 
         <a href="products"
            class="shop-btn"
            style="margin-top:20px;">
-
             Continue Shopping
-
         </a>
 
     </div>
 
-
 <%
-
     }
-
 %>
-
 
 </div>
 

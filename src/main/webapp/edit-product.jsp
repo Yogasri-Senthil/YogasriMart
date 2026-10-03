@@ -167,13 +167,8 @@
 
     <a href="my-products"
        class="back-btn">
-
         ← Back to My Products
-
     </a>
-
 </div>
-
 </body>
-
 </html>
