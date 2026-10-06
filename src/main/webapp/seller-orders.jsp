@@ -100,6 +100,53 @@
             font-weight: bold;
         }
 
+        .status-form {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .status-form select {
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .status-form button {
+            padding: 10px 16px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .status-form button:hover {
+            background: #0369a1;
+        }
+
+        .message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
         .empty {
             background: white;
             padding: 50px;
@@ -148,6 +195,50 @@
     <h1>📦 Seller Orders</h1>
 
 <%
+
+    String success = request.getParameter("success");
+    String error = request.getParameter("error");
+
+    if ("statusUpdated".equals(success)) {
+
+%>
+
+        <div class="message">
+            Order status updated successfully.
+        </div>
+
+<%
+    }
+
+    if ("invalidOrder".equals(error)) {
+%>
+
+        <div class="error">
+            Invalid order.
+        </div>
+
+<%
+    }
+
+    if ("invalidStatus".equals(error)) {
+%>
+
+        <div class="error">
+            Invalid order status.
+        </div>
+
+<%
+    }
+
+    if ("updateFailed".equals(error)) {
+%>
+
+        <div class="error">
+            Failed to update order status.
+        </div>
+
+<%
+    }
 
     User seller = (User) session.getAttribute("user");
 
@@ -265,13 +356,63 @@
                 </p>
 
                 <p>
-                    <strong>Status:</strong>
+                    <strong>Current Status:</strong>
 
                     <span class="status">
                         <%= order.status %>
                     </span>
 
                 </p>
+
+                <form
+                    class="status-form"
+                    action="update-order-status"
+                    method="post">
+
+                    <input
+                        type="hidden"
+                        name="orderId"
+                        value="<%= order.id %>">
+
+                    <select name="status">
+
+                        <option
+                            value="PLACED"
+                            <%= "PLACED".equals(order.status) ? "selected" : "" %>>
+                            PLACED
+                        </option>
+
+                        <option
+                            value="SHIPPED"
+                            <%= "SHIPPED".equals(order.status) ? "selected" : "" %>>
+                            SHIPPED
+                        </option>
+
+                        <option
+                            value="DELIVERED"
+                            <%= "DELIVERED".equals(order.status) ? "selected" : "" %>>
+                            DELIVERED
+                        </option>
+
+                        <option
+                            value="COMPLETED"
+                            <%= "COMPLETED".equals(order.status) ? "selected" : "" %>>
+                            COMPLETED
+                        </option>
+
+                        <option
+                            value="CANCELLED"
+                            <%= "CANCELLED".equals(order.status) ? "selected" : "" %>>
+                            CANCELLED
+                        </option>
+
+                    </select>
+
+                    <button type="submit">
+                        Update Status
+                    </button>
+
+                </form>
 
             </div>
 
