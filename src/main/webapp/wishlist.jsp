@@ -78,9 +78,26 @@
             text-align: center;
         }
 
+        .product-image {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .product-icon {
             font-size: 65px;
-            margin-bottom: 15px;
         }
 
         .product-name {
@@ -172,7 +189,6 @@
 
 <body>
 
-
 <div class="navbar">
 
     <div class="logo">
@@ -181,26 +197,17 @@
 
     <div class="nav-links">
 
-        <a href="home.jsp">
-            Home
-        </a>
+        <a href="home.jsp">Home</a>
 
-        <a href="products">
-            Products
-        </a>
+        <a href="products">Products</a>
 
-        <a href="wishlist.jsp">
-            Wishlist ❤️
-        </a>
+        <a href="wishlist.jsp">Wishlist ❤️</a>
 
-        <a href="cart.jsp">
-            Cart 🛒
-        </a>
+        <a href="cart.jsp">Cart 🛒</a>
 
     </div>
 
 </div>
-
 
 <div class="container">
 
@@ -208,21 +215,17 @@
         ❤️ My Wishlist
     </h1>
 
-
 <%
 
     List<Map<String, String>> wishlist =
             (List<Map<String, String>>)
                     session.getAttribute("wishlist");
 
-
     if (wishlist != null && !wishlist.isEmpty()) {
 
 %>
 
-
 <div class="wishlist">
-
 
 <%
 
@@ -230,55 +233,49 @@
 
             String name = product.get("name");
             String price = product.get("price");
+            String imagePath = product.get("imagePath");
 
 %>
 
-
     <div class="wishlist-item">
 
-        <div class="product-icon">
+        <div class="product-image">
 
-            <%
+<%
 
-                if (name.equals("Wireless Headphones")) {
-                    out.print("🎧");
+            if (imagePath != null &&
+                !imagePath.trim().isEmpty()) {
 
-                } else if (name.equals("Smart Watch")) {
-                    out.print("⌚");
+%>
 
-                } else if (name.equals("Travel Backpack")) {
-                    out.print("🎒");
+            <img src="<%= request.getContextPath() %>/<%= imagePath %>"
+                 alt="<%= name %>">
 
-                } else if (name.equals("Sports Shoes")) {
-                    out.print("👟");
+<%
 
-                } else if (name.equals("Laptop")) {
-                    out.print("💻");
+            } else {
 
-                } else if (name.equals("Smart Phone")) {
-                    out.print("📱");
+%>
 
-                } else if (name.equals("Women's Dress")) {
-                    out.print("👗");
+            <div class="product-icon">
 
-                } else if (name.equals("Beauty Kit")) {
-                    out.print("💄");
+                🛍️
 
-                } else {
-                    out.print("🛍️");
-                }
+            </div>
 
-            %>
+<%
+
+            }
+
+%>
 
         </div>
-
 
         <div class="product-name">
 
             <%= name %>
 
         </div>
-
 
         <div class="price">
 
@@ -287,11 +284,7 @@
 
         </div>
 
-
         <div class="button-group">
-
-
-            <!-- Add to Cart -->
 
             <form action="add-to-cart" method="post">
 
@@ -311,6 +304,10 @@
                        name="sellerId"
                        value="<%= product.get("sellerId") %>">
 
+                <input type="hidden"
+                       name="imagePath"
+                       value="<%= product.get("imagePath") != null ? product.get("imagePath") : "" %>">
+
                 <button type="submit"
                         class="cart-btn">
 
@@ -319,9 +316,6 @@
                 </button>
 
             </form>
-
-
-            <!-- Remove from Wishlist -->
 
             <form action="remove-from-wishlist"
                   method="post">
@@ -339,12 +333,9 @@
 
             </form>
 
-
         </div>
 
-
     </div>
-
 
 <%
 
@@ -352,16 +343,13 @@
 
 %>
 
-
 </div>
-
 
 <%
 
     } else {
 
 %>
-
 
     <div class="empty">
 
@@ -386,13 +374,11 @@
 
     </div>
 
-
 <%
 
     }
 
 %>
-
 
 </div>
 

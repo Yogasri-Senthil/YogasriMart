@@ -9,9 +9,9 @@ import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 @WebServlet("/add-to-wishlist")
 public class AddToWishlistServlet extends HttpServlet {
@@ -25,6 +25,7 @@ public class AddToWishlistServlet extends HttpServlet {
         String name = request.getParameter("name");
         String price = request.getParameter("price");
         String sellerId = request.getParameter("sellerId");
+        String imagePath = request.getParameter("imagePath");
 
         HttpSession session = request.getSession();
 
@@ -55,6 +56,8 @@ public class AddToWishlistServlet extends HttpServlet {
             product.put("name", name);
             product.put("price", price);
             product.put("sellerId", sellerId);
+            product.put("imagePath",
+                    imagePath != null ? imagePath : "");
 
             wishlist.add(product);
 
