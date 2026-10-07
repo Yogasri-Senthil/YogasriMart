@@ -230,6 +230,16 @@
 <%
     }
 
+    if ("invalidTransition".equals(error)) {
+%>
+
+        <div class="error">
+            Invalid order status transition.
+        </div>
+
+<%
+    }
+
     if ("updateFailed".equals(error)) {
 %>
 
@@ -289,26 +299,26 @@
 
                     <div class="product-image">
 
-                        <%
-                            if (order.imagePath != null
-                                    && !order.imagePath.trim().isEmpty()) {
-                        %>
+<%
+                        if (order.imagePath != null
+                                && !order.imagePath.trim().isEmpty()) {
+%>
 
                             <img
                                 src="<%= request.getContextPath() %>/<%= order.imagePath %>"
                                 alt="<%= order.productName %>">
 
-                        <%
-                            } else {
-                        %>
+<%
+                        } else {
+%>
 
                             <div class="product-icon">
                                 🛍️
                             </div>
 
-                        <%
-                            }
-                        %>
+<%
+                        }
+%>
 
                     </div>
 
@@ -364,6 +374,12 @@
 
                 </p>
 
+<%
+
+                if ("PLACED".equals(order.status)) {
+
+%>
+
                 <form
                     class="status-form"
                     action="update-order-status"
@@ -376,33 +392,11 @@
 
                     <select name="status">
 
-                        <option
-                            value="PLACED"
-                            <%= "PLACED".equals(order.status) ? "selected" : "" %>>
-                            PLACED
-                        </option>
-
-                        <option
-                            value="SHIPPED"
-                            <%= "SHIPPED".equals(order.status) ? "selected" : "" %>>
+                        <option value="SHIPPED">
                             SHIPPED
                         </option>
 
-                        <option
-                            value="DELIVERED"
-                            <%= "DELIVERED".equals(order.status) ? "selected" : "" %>>
-                            DELIVERED
-                        </option>
-
-                        <option
-                            value="COMPLETED"
-                            <%= "COMPLETED".equals(order.status) ? "selected" : "" %>>
-                            COMPLETED
-                        </option>
-
-                        <option
-                            value="CANCELLED"
-                            <%= "CANCELLED".equals(order.status) ? "selected" : "" %>>
+                        <option value="CANCELLED">
                             CANCELLED
                         </option>
 
@@ -413,6 +407,86 @@
                     </button>
 
                 </form>
+
+<%
+
+                } else if ("SHIPPED".equals(order.status)) {
+
+%>
+
+                <form
+                    class="status-form"
+                    action="update-order-status"
+                    method="post">
+
+                    <input
+                        type="hidden"
+                        name="orderId"
+                        value="<%= order.id %>">
+
+                    <select name="status">
+
+                        <option value="DELIVERED">
+                            DELIVERED
+                        </option>
+
+                        <option value="CANCELLED">
+                            CANCELLED
+                        </option>
+
+                    </select>
+
+                    <button type="submit">
+                        Update Status
+                    </button>
+
+                </form>
+
+<%
+
+                } else if ("DELIVERED".equals(order.status)) {
+
+%>
+
+                <form
+                    class="status-form"
+                    action="update-order-status"
+                    method="post">
+
+                    <input
+                        type="hidden"
+                        name="orderId"
+                        value="<%= order.id %>">
+
+                    <select name="status">
+
+                        <option value="COMPLETED">
+                            COMPLETED
+                        </option>
+
+                    </select>
+
+                    <button type="submit">
+                        Update Status
+                    </button>
+
+                </form>
+
+<%
+
+                } else {
+
+%>
+
+                <p style="margin-top:15px;color:#666;font-weight:bold;">
+                    No further status updates available.
+                </p>
+
+<%
+
+                }
+
+%>
 
             </div>
 

@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 @WebServlet("/update-order-status")
 public class UpdateOrderStatusServlet extends HttpServlet {
@@ -44,44 +46,106 @@ public class UpdateOrderStatusServlet extends HttpServlet {
             return;
         }
 
-        String status = request.getParameter("status");
+        String newStatus = request.getParameter("status");
 
-        if (status == null) {
+        if (newStatus == null) {
             response.sendRedirect("seller-orders.jsp?error=invalidStatus");
             return;
         }
 
-        if (!status.equals("PLACED")
-                && !status.equals("SHIPPED")
-                && !status.equals("DELIVERED")
-                && !status.equals("COMPLETED")
-                && !status.equals("CANCELLED")) {
+        if (!newStatus.equals("SHIPPED")
+                && !newStatus.equals("DELIVERED")
+                && !newStatus.equals("COMPLETED")
+                && !newStatus.equals("CANCELLED")) {
 
             response.sendRedirect("seller-orders.jsp?error=invalidStatus");
             return;
         }
 
-        String sql = "UPDATE orders SET status = ? " +
+        String currentStatus = null;
+
+        String selectSql =
+                "SELECT status FROM orders " +
                 "WHERE id = ? AND seller_id = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection =
+                     DatabaseConnection.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(selectSql)) {
 
-            statement.setString(1, status);
-            statement.setInt(2, orderId);
-            statement.setInt(3, seller.getId());
+            statement.setInt(1, orderId);
+            statement.setInt(2, seller.getId());
 
-            int updated = statement.executeUpdate();
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
-            if (updated > 0) {
-                response.sendRedirect("seller-orders.jsp?success=statusUpdated");
-            } else {
-                response.sendRedirect("seller-orders.jsp?error=updateFailed");
+                if (resultSet.next()) {
+                    currentStatus =
+                            resultSet.getString("status");
+                } else {
+                    response.sendRedirect(
+                            "seller-orders.jsp?error=invalidOrder");
+                    return;
+                }
+            }
+
+            boolean validTransition = false;
+
+            if ("PLACED".equals(currentStatus)) {
+
+                if ("SHIPPED".equals(newStatus)
+                        || "CANCELLED".equals(newStatus)) {
+                    validTransition = true;
+                }
+
+            } else if ("SHIPPED".equals(currentStatus)) {
+
+                if ("DELIVERED".equals(newStatus)
+                        || "CANCELLED".equals(newStatus)) {
+                    validTransition = true;
+                }
+
+            } else if ("DELIVERED".equals(currentStatus)) {
+
+                if ("COMPLETED".equals(newStatus)) {
+                    validTransition = true;
+                }
+            }
+
+            if (!validTransition) {
+                response.sendRedirect(
+                        "seller-orders.jsp?error=invalidTransition");
+                return;
+            }
+
+            String updateSql =
+                    "UPDATE orders SET status = ? " +
+                    "WHERE id = ? AND seller_id = ?";
+
+            try (PreparedStatement updateStatement =
+                         connection.prepareStatement(updateSql)) {
+
+                updateStatement.setString(1, newStatus);
+                updateStatement.setInt(2, orderId);
+                updateStatement.setInt(3, seller.getId());
+
+                int updated =
+                        updateStatement.executeUpdate();
+
+                if (updated > 0) {
+                    response.sendRedirect(
+                            "seller-orders.jsp?success=statusUpdated");
+                } else {
+                    response.sendRedirect(
+                            "seller-orders.jsp?error=updateFailed");
+                }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("seller-orders.jsp?error=updateFailed");
+
+            response.sendRedirect(
+                    "seller-orders.jsp?error=updateFailed");
         }
     }
 }
