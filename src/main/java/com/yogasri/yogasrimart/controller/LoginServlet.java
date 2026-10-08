@@ -67,7 +67,7 @@ public class LoginServlet extends HttpServlet {
 
         else if ("SELLER".equals(user.getRole())) {
 
-            response.sendRedirect("seller.jsp");
+            response.sendRedirect("seller-dashboard");
 
         }
 
