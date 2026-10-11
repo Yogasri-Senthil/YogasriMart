@@ -18,15 +18,34 @@ public class DatabaseConnection {
 
         String host = System.getenv("MYSQLHOST");
         String port = System.getenv("MYSQLPORT");
+
+        // Support both database variable names.
         String database = System.getenv("MYSQL_DATABASE");
+
+        if (database == null || database.isBlank()) {
+            database = System.getenv("MYSQLDATABASE");
+        }
+
         String username = System.getenv("MYSQLUSER");
+
+        // Support both password variable names.
         String password = System.getenv("MYSQLPASSWORD");
 
-        if (host == null || port == null || database == null
-                || username == null || password == null) {
+        if (password == null || password.isBlank()) {
+            password = System.getenv("MYSQL_PASSWORD");
+        }
+
+        // Validate required environment variables.
+        if (host == null || host.isBlank()
+                || port == null || port.isBlank()
+                || database == null || database.isBlank()
+                || username == null || username.isBlank()
+                || password == null || password.isBlank()) {
 
             throw new IllegalStateException(
-                    "Railway MySQL environment variables are missing."
+                    "Railway MySQL environment variables are missing. "
+                    + "Check MYSQLHOST, MYSQLPORT, MYSQL_DATABASE/"
+                    + "MYSQLDATABASE, MYSQLUSER and MYSQLPASSWORD."
             );
         }
 
@@ -40,19 +59,25 @@ public class DatabaseConnection {
         config.setUsername(username);
         config.setPassword(password);
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+
         config.setMaximumPoolSize(5);
         config.setConnectionTimeout(30000);
 
-        dataSource = new HikariDataSource(config);
+        HikariDataSource newDataSource = new HikariDataSource(config);
 
-        // Verify the database connection.
-        try (Connection connection = dataSource.getConnection()) {
+        // Verify database connection before saving the pool.
+        try (Connection connection = newDataSource.getConnection()) {
+
+            dataSource = newDataSource;
+
             System.out.println(
                     "Railway MySQL connection verified successfully."
             );
+
         } catch (SQLException e) {
-            dataSource.close();
-            dataSource = null;
+
+            newDataSource.close();
+
             throw new IllegalStateException(
                     "Railway MySQL connection failed.", e
             );
