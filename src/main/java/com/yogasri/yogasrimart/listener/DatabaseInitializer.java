@@ -21,122 +21,94 @@ public class DatabaseInitializer implements ServletContextListener {
 
         System.out.println("YogasriMart Database Initializer Started");
 
-        DatabaseConnection.initialize();
+        try {
+            // Initialize database connection
+            DatabaseConnection.initialize();
 
-        try (
-                Connection connection = DatabaseConnection.getConnection();
-                InputStream inputStream = sce.getServletContext()
-                        .getResourceAsStream("/WEB-INF/classes/schema.sql")
-        ) {
+            // Get database connection
+            try (Connection connection =
+                         DatabaseConnection.getConnection()) {
 
-            if (inputStream == null) {
-                throw new RuntimeException("schema.sql not found");
+                // Load schema.sql from WEB-INF/classes
+                InputStream inputStream =
+                        DatabaseInitializer.class
+                                .getClassLoader()
+                                .getResourceAsStream("schema.sql");
+
+                if (inputStream == null) {
+                    throw new IllegalStateException(
+                            "schema.sql not found in WEB-INF/classes"
+                    );
+                }
+
+                String sql;
+
+                try (inputStream) {
+                    sql = new String(
+                            inputStream.readAllBytes(),
+                            StandardCharsets.UTF_8
+                    );
+                }
+
+                // Execute SQL statements
+                try (Statement statement =
+                             connection.createStatement()) {
+
+                    for (String query : sql.split(";")) {
+                        query = query.trim();
+
+                        if (!query.isEmpty()) {
+                            statement.execute(query);
+                        }
+                    }
+                }
+
+                System.out.println(
+                        "Database tables created successfully."
+                );
+
+                // Create default admin account
+                createDefaultAdmin(connection);
             }
 
-            String sql = new String(
-                    inputStream.readAllBytes(),
-                    StandardCharsets.UTF_8
-            );
-
-           try (Statement statement = connection.createStatement()) {
-
-                statement.execute(sql);
-
-                statement.executeUpdate(
-            "ALTER TABLE products ADD COLUMN IF NOT EXISTS image_path VARCHAR(255)"
-    );
-
-}
-
-            System.out.println("Database tables created successfully.");
-
-            // Create default ADMIN account
-            createDefaultAdmin(connection);
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-
-            throw new RuntimeException(
-                    "Database schema initialization failed.",
-                    e
+            System.out.println(
+                    "Database initialization completed successfully."
             );
 
         } catch (Exception e) {
-
+            System.err.println("Database initialization failed.");
             e.printStackTrace();
 
             throw new RuntimeException(
-                    "Error reading schema.sql.",
-                    e
+                    "Database initialization failed.", e
             );
         }
-
-        System.out.println(
-                "Database connection pool initialized successfully."
-        );
     }
-
 
     private void createDefaultAdmin(Connection connection)
             throws SQLException {
 
-        String checkSql =
-                "SELECT COUNT(*) FROM users WHERE email = ?";
+        String sql =
+                "INSERT INTO users (name, email, password_hash, role) "
+                + "VALUES (?, ?, ?, ?) "
+                + "ON DUPLICATE KEY UPDATE email = email";
 
-        String insertSql =
-                "INSERT INTO users " +
-                "(name, email, password_hash, role) " +
-                "VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-        try (PreparedStatement checkStatement =
-                     connection.prepareStatement(checkSql)) {
+            statement.setString(1, "Admin");
+            statement.setString(2, "admin@gmail.com");
 
-            checkStatement.setString(1, "admin@gmail.com");
+            // Replace with the password hash expected by your login code.
+            statement.setString(3, "Admin@123");
 
-            var resultSet = checkStatement.executeQuery();
+            statement.setString(4, "ADMIN");
 
-            if (resultSet.next() && resultSet.getInt(1) == 0) {
-
-                try (PreparedStatement insertStatement =
-                             connection.prepareStatement(insertSql)) {
-
-                    insertStatement.setString(
-                            1,
-                            "Admin"
-                    );
-
-                    insertStatement.setString(
-                            2,
-                            "admin@gmail.com"
-                    );
-
-                    insertStatement.setString(
-                            3,
-                            "Admin@123"
-                    );
-
-                    insertStatement.setString(
-                            4,
-                            "ADMIN"
-                    );
-
-                    insertStatement.executeUpdate();
-
-                    System.out.println(
-                            "Default ADMIN account created."
-                    );
-                }
-
-            } else {
-
-                System.out.println(
-                        "ADMIN account already exists."
-                );
-            }
+            statement.executeUpdate();
         }
-    }
 
+        System.out.println("Default ADMIN account created.");
+    }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
