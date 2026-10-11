@@ -10,24 +10,26 @@ public class DatabaseConnection {
     private static HikariDataSource dataSource;
 
     public static void initialize() {
+
         HikariConfig config = new HikariConfig();
 
         String host = System.getenv("MYSQLHOST");
         String port = System.getenv("MYSQLPORT");
-        String database = System.getenv("MYSQL_DATABASE");
+        String database = System.getenv("MYSQLDATABASE");
         String username = System.getenv("MYSQLUSER");
-        String password = System.getenv("MYSQLPASSWORD");
+        String password = System.getenv("MYSQL_PASSWORD");
 
         if (host == null || port == null || database == null
                 || username == null || password == null) {
+
             throw new IllegalStateException(
-                    "Railway MySQL environment variables are missing."
+                "Railway MySQL environment variables are missing."
             );
         }
 
         config.setJdbcUrl(
-                "jdbc:mysql://" + host + ":" + port + "/" + database
-                        + "?sslMode=REQUIRED"
+            "jdbc:mysql://" + host + ":" + port + "/" + database
+                + "?sslMode=REQUIRED"
         );
 
         config.setUsername(username);
@@ -41,9 +43,10 @@ public class DatabaseConnection {
     }
 
     public static Connection getConnection() throws SQLException {
+
         if (dataSource == null) {
             throw new SQLException(
-                    "Database connection pool is not initialized."
+                "Database connection pool is not initialized."
             );
         }
 
@@ -51,6 +54,7 @@ public class DatabaseConnection {
     }
 
     public static void shutdown() {
+
         if (dataSource != null) {
             dataSource.close();
         }
